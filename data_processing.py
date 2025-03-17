@@ -13,7 +13,7 @@ from spacy.tokens import DocBin
 # Define minimum speech length in characters
 min_speech_length = 1500
 
-number_of_sessions = 182
+number_of_sessions = 212
 
 
 all_speeches = {"CDU/CSU": [],

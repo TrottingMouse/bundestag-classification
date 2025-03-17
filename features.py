@@ -1,8 +1,7 @@
 import spacy
-from spacy_sentiws import spaCySentiWS
 from spacy.matcher import Matcher
-
-
+import nltk
+from textblob_de import TextBlobDE
 
 
 def get_I_count_average(speech_as_doc):
@@ -111,6 +110,8 @@ def get_wir_Sie_sentence_share(speech_as_doc, nlp_object):
 
 
 def get_negation_share(speech_as_doc):
+    """Input: spacy-doc-object.
+    Returns the share of sentences containing a negation."""
     n_negations = 0
     n_tokens = 0
     for token in speech_as_doc:
@@ -121,4 +122,7 @@ def get_negation_share(speech_as_doc):
 
 
 def get_sentiment(speech_as_doc):
-    pass
+    """Input: spacy-doc-object.
+    Returns the sentiment of the speech (on a scale from -1 to 1)."""
+    blob = TextBlobDE(speech_as_doc.text)
+    return blob.sentiment.polarity
