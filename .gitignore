@@ -4,7 +4,6 @@ all_speeches.pkl
 all_docs.pkl
 *.xml
 Test/
-Report/
 **/__pycache__
 output.txt
 notes.txt

@@ -2,9 +2,11 @@
 
 import requests
 
+number_of_sessions = 212
+
 # For every debate there is an xml-file and the number is in its Link
 #all debates till parliamentary summer break
-for sitzungsnummer in range(212, 213):
+for sitzungsnummer in range(1, number_of_sessions + 1):
     # URL of the XML file
     url = f"https://dserver.bundestag.de/btp/20/20{sitzungsnummer:03}.xml"
 
@@ -66,7 +68,7 @@ replace_symbols = [" ", '<p klasse="J">', '',
             ]
                    
 
-for sitzungsnummer in range(1, 213):
+for sitzungsnummer in range(1, number_of_sessions + 1):
     with open(f'Files/20{sitzungsnummer:03}.xml', 'r') as file:
         content = file.read()
 
