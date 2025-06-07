@@ -1,7 +1,4 @@
-import spacy
 from spacy.matcher import Matcher
-import nltk
-from textblob_de import TextBlobDE
 
 
 def get_I_count_average(speech_as_doc):
@@ -35,9 +32,34 @@ def get_Sie_count_average(speech_as_doc):
     num_sie = 0
     for token in speech_as_doc:
         n_tokens += 1
+        # Making sure that the third person singular pronouns are not included
         if token.text == "Sie" and "Fem" not in token.morph.get("Gender"):
             num_sie += 1
     return num_sie/n_tokens
+
+
+def get_noun_share(speech_as_doc):
+    """Input:spacy-doc-object.
+    Returns the number of nouns per token."""
+    n_tokens = 0
+    num_noun = 0
+    for token in speech_as_doc:
+        n_tokens += 1
+        if token.pos_ in {"NOUN", "PROPN"}:
+            num_noun += 1
+    return num_noun/n_tokens
+
+
+def get_modal_verb_share(speech_as_doc):
+    """Input:spacy-doc-object.
+    Returns the number of modal verbs per token."""
+    n_tokens = 0
+    num_modv = 0
+    for token in speech_as_doc:
+        n_tokens += 1
+        if token.tag_ == 'MD':
+            num_modv += 1
+    return num_modv/n_tokens
 
 
 def get_exclamation_share(speech_as_doc):
@@ -119,10 +141,3 @@ def get_negation_share(speech_as_doc):
             n_negations += 1
         n_tokens += 1
     return n_negations/n_tokens
-
-
-def get_sentiment(speech_as_doc):
-    """Input: spacy-doc-object.
-    Returns the sentiment of the speech (on a scale from -1 to 1)."""
-    blob = TextBlobDE(speech_as_doc.text)
-    return blob.sentiment.polarity

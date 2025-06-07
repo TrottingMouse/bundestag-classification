@@ -3,21 +3,19 @@ import pickle
 from spacy.tokens import DocBin
 from spacy.tokens import Doc
 import pandas as pd
+import spacy
 
 
-with open('all_speeches.pkl', 'rb') as infile:
-    all_speeches = pickle.load(infile)
 
 with open('all_docs.pkl', 'rb') as infile:
     all_speeches_as_docs = pickle.load(infile)
 
-# load model for sentiment analysis
-nltk.download('punkt_tab')
 
 # Initialize an empty DataFrame
 feature_matrices = pd.DataFrame(columns=[
-    "Party", "I_count_avg", "we_count_avg", "Sie_count_avg", "exclamation_share", 
-    "question_share", "avg_sentence_length", "avg_dependency_length", "negation_share"
+    "Party", "I_count_avg", "we_count_avg", "Sie_count_avg",
+    "exclamation_share", "question_share", "avg_sentence_length",
+    "avg_dependency_length", "negation_share"
 ])
 
 nlp = spacy.blank("de")
@@ -33,16 +31,17 @@ rows = []
 for key in all_speeches_as_docs.keys():
     for doc in all_speeches_as_docs[key]:
         rows.append({
-            "Party": key,
+            "party": key,
             "I_count_avg": get_I_count_average(doc),
             "we_count_avg": get_we_count_average(doc),
             "Sie_count_avg": get_Sie_count_average(doc),
+            "noun_share": get_noun_share(doc),
+            "modal_verb_share": get_modal_verb_share(doc),
             "exclamation_share": get_exclamation_share(doc),
             "question_share": get_question_share(doc),
             "avg_sentence_length": get_avg_sentence_length(doc),
             "avg_dependency_length": get_avg_dependency_length(doc),
-            "negation_share": get_negation_share(doc),
-            "sentiment": get_sentiment(doc)
+            "negation_share": get_negation_share(doc)
         })
 
 # Convert list of dictionaries to DataFrame
