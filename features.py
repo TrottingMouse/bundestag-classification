@@ -38,6 +38,27 @@ def get_Sie_count_average(speech_as_doc):
     return num_sie/n_tokens
 
 
+def get_wir_Sie_sentence_share(speech_as_doc, nlp_object):
+    """Input: spacy-doc-object, spacy-nlp-object.
+    Returns the share of sentences containing a 'wir-Sie'-juxtaposition
+    (in any order)."""
+    matcher = Matcher(nlp_object.vocab)
+    patterns = [[{"LEMMA": "wir"},
+                 {"OP": "+"},
+                 {"TEXT": {"IN": ["Sie", "Ihnen", "Ihr", "Ihre"]}}],
+                [{"TEXT": {"IN": ["Sie", "Ihnen", "Ihr", "Ihre"]}},
+                 {"OP": "+"},
+                 {"LEMMA": "wir"}]]
+    matcher.add("wir-Sie", patterns)
+    n_matches = 0
+    n_sentences = 0
+    for sentence in speech_as_doc.sents:
+        n_sentences += 1
+        if matcher(sentence) != []:
+            n_matches += 1
+    return n_matches/n_sentences
+
+
 def get_noun_share(speech_as_doc):
     """Input:spacy-doc-object.
     Returns the number of nouns per token."""
@@ -53,11 +74,12 @@ def get_noun_share(speech_as_doc):
 def get_modal_verb_share(speech_as_doc):
     """Input:spacy-doc-object.
     Returns the number of modal verbs per token."""
+    modals = ["können", "müssen", "dürfen", "sollen", "wollen", "mögen"]
     n_tokens = 0
     num_modv = 0
     for token in speech_as_doc:
         n_tokens += 1
-        if token.tag_ == 'MD':
+        if token.lemma_ in modals:
             num_modv += 1
     return num_modv/n_tokens
 
@@ -108,27 +130,6 @@ def get_avg_dependency_length(speech_as_doc):
         sum_dist_averages += sum_distances/len(sentence)
         n_sentences += 1
     return sum_dist_averages/n_sentences
-
-
-def get_wir_Sie_sentence_share(speech_as_doc, nlp_object):
-    """Input: spacy-doc-object, spacy-nlp-object.
-    Returns the share of sentences containing a 'wir-Sie'-juxtaposition
-    (in any order)."""
-    matcher = Matcher(nlp_object.vocab)
-    patterns = [[{"LEMMA": "wir"},
-                 {"OP": "+"},
-                 {"TEXT": {"IN": ["Sie", "Ihnen", "Ihr", "Ihre"]}}],
-                [{"TEXT": {"IN": ["Sie", "Ihnen", "Ihr", "Ihre"]}},
-                 {"OP": "+"},
-                 {"LEMMA": "wir"}]]
-    matcher.add("wir-Sie", patterns)
-    n_matches = 0
-    n_sentences = 0
-    for sentence in speech_as_doc.sents:
-        n_sentences += 1
-        if matcher(sentence) != []:
-            n_matches += 1
-    return n_matches/n_sentences
 
 
 def get_negation_share(speech_as_doc):

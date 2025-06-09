@@ -18,6 +18,7 @@ feature_matrices = pd.DataFrame(columns=[
     "avg_dependency_length", "negation_share"
 ])
 
+# As the speeches are already annotated, we only need a blank pipeline
 nlp = spacy.blank("de")
 for key in all_speeches_as_docs.keys():
     print(key)
@@ -35,6 +36,7 @@ for key in all_speeches_as_docs.keys():
             "I_count_avg": get_I_count_average(doc),
             "we_count_avg": get_we_count_average(doc),
             "Sie_count_avg": get_Sie_count_average(doc),
+            "wir_Sie_sentence_share": get_wir_Sie_sentence_share(doc, nlp),
             "noun_share": get_noun_share(doc),
             "modal_verb_share": get_modal_verb_share(doc),
             "exclamation_share": get_exclamation_share(doc),
@@ -53,22 +55,3 @@ print(feature_matrices.head())
 
 with open('feature_matrices.pkl', 'wb') as outfile:
     pickle.dump(feature_matrices, outfile)
-
-
-
-
-
-# now = time.time()
-# test_doc = all_speeches_as_docs["SPD"][0]
-# print(time.time()-now)
-# print(get_I_count_average(test_doc))
-# print(time.time()-now)
-# print(get_we_count_average(test_doc))
-# print(time.time()-now)
-# print(get_Sie_count_average(test_doc))
-# print(time.time()-now)
-# print(get_exclamation_share(test_doc))
-# print(time.time()-now)
-# print(get_avg_sentence_length(test_doc))
-# print(time.time()-now)
-#
