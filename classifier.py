@@ -9,7 +9,6 @@ from sklearn.pipeline import make_pipeline
 from sklearn.ensemble import RandomForestClassifier
 from sklearn.metrics import ConfusionMatrixDisplay, classification_report, confusion_matrix
 import matplotlib.pyplot as plt
-import time
 
 
 RANDOM_STATE = 42
@@ -31,7 +30,7 @@ def train(model, X, y):
 
 def evaluate(algorithm_name, grids, X_test, y_test):
     """Input: the algorithm name, a dictionary of GridSearchCV objects, test data and labels
-    Prints the classification report, the best hyperparameters.
+    Prints the classification report and the best hyperparameters.
     Saves a confusion matrix for the best model"""
     for dataset in grids:
         grid = grids[dataset]
@@ -41,16 +40,16 @@ def evaluate(algorithm_name, grids, X_test, y_test):
         print("Best parameters:", grids[dataset].best_params_)
         print()
 
+    full_labels = ["CDU/CSU", "SPD", "BÜNDNIS 90/DIE GRÜNEN", "DIE LINKE", "AfD", "FDP"]
     labels = ["CDU/CSU", "SPD", "GRÜNE", "LINKE", "AfD", "FDP"]
-    cm = confusion_matrix(y_test, y_pred, labels=labels, normalize='true')
+
+    cm = confusion_matrix(y_test, y_pred, normalize='true', labels=full_labels)
     disp_cm = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
 
     disp_cm.plot(cmap='Blues')
     plt.title(f"Confusion Matrix for {algorithm_name}")
     plt.savefig(f"confusion_matrix_{algorithm_name}.png")
     plt.close()
-
-
 
 
 with open('feature_matrices.pkl', 'rb') as infile:
@@ -104,7 +103,6 @@ train_datasets = {"unbalanced": [X_train, y_train],
 
 
 # Perform tuning of hyperparameters with a grid search
-now = time.time()
 # Logistic Regression
 
 param_grid_lr = {
@@ -125,7 +123,6 @@ for dataset in train_datasets.keys():
     )
 
     grids_lr[dataset].fit(train_datasets[dataset][0], train_datasets[dataset][1])
-    print(time.time() - now)
 
 
 # Support Vector Classifier
@@ -147,7 +144,6 @@ for dataset in train_datasets.keys():
     )
 
     grids_svc[dataset].fit(train_datasets[dataset][0], train_datasets[dataset][1])
-    print(time.time() - now)
 
 
 
@@ -171,7 +167,6 @@ for dataset in train_datasets.keys():
     )
 
     grids_rfc[dataset].fit(train_datasets[dataset][0], train_datasets[dataset][1])
-    print(time.time() - now)
 
 
 # Evaluate all three algorithms
