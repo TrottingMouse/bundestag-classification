@@ -2,9 +2,10 @@ numpy
 matplotlib
 scikit-learn
 pandas
-spacy
+spacy==3.8.0
 imbalanced-learn
 requests
+pydantic>=2.7.4
 https://github.com/explosion/spacy-models/releases/download/de_core_news_sm-3.8.0/de_core_news_sm-3.8.0-py3-none-any.whl
 
 
