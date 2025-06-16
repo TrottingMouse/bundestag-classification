@@ -26,7 +26,7 @@ all_speeches = {"CDU/CSU": [],
                 "BSW": [],
                 "Die Linke": []}
 
-all_speeches_as_docs = all_speeches
+all_speeches_as_docs = {k: [] for k in all_speeches}
 
 
 def read_xml_file(xml_inpath):
@@ -150,7 +150,6 @@ with open('all_docs.pkl', 'wb') as f:
 
 # with open('all_speeches.pkl', 'wb') as outfile:
 #     pickle.dump(all_speeches, outfile)
-
 
 for i in all_speeches:
     print(f"For party {i} there are {len(all_speeches[i])} speeches.")
