@@ -5,6 +5,5 @@ pandas
 spacy
 imbalanced-learn
 https://github.com/explosion/spacy-models/releases/download/de_core_news_sm-3.8.0/de_core_news_sm-3.8.0-py3-none-any.whl
-textblob==0.15.3
-textblob-de
+
 
