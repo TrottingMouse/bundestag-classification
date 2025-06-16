@@ -26,11 +26,11 @@ for sitzungsnummer in range(1, NUMBER_OF_SESSIONS + 1):
 # replacing inconsistent whitespace and inconsistencies in XML files
 # weird list formatting because of tabs and line breaks in Strings
 search_symbols = [" ", "<p>", "<p/>",
-                    """<name>
+                  """<name>
 							<vorname>Dirk-UlrichAlexander</vorname>
 							<nachname>Mende Föhr</nachname>
 							<fraktion>SPDCDU/CSU</fraktion>
-					    </name>
+						</name>
 					</redner>Dirk-Ulrich Mende (SPD):</p>""",
                     """<name>
 							<vorname>Dirk-UlrichAlexander</vorname>
