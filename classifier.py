@@ -4,34 +4,72 @@ from imblearn.over_sampling import RandomOverSampler
 from sklearn.linear_model import LogisticRegression
 from sklearn.svm import SVC
 from sklearn import preprocessing
-from sklearn.model_selection import GridSearchCV, cross_val_score, train_test_split, StratifiedKFold
+from sklearn.model_selection import (
+    GridSearchCV,
+    cross_val_score,
+    train_test_split,
+    StratifiedKFold
+)
 from sklearn.pipeline import make_pipeline
 from sklearn.ensemble import RandomForestClassifier
-from sklearn.metrics import ConfusionMatrixDisplay, classification_report, confusion_matrix
+from sklearn.metrics import (
+    ConfusionMatrixDisplay,
+    classification_report,
+    confusion_matrix
+)
 import matplotlib.pyplot as plt
 
 
+# Random state for reproduction of the results
 RANDOM_STATE = 42
 
 
 def train_pipeline(model):
-    """Input: a scikit-learn machine learning class.
-    Returns a pipeline with a scaler and the class."""
+    """
+    Creates a pipeline with a scaler and the given model.
+
+    Args:
+        model (sklearn.base.BaseEstimator): A scikit-learn machine learning
+            class.
+
+    Returns:
+        sklearn.pipeline.Pipeline: Pipeline with scaler and model.
+    """
     return make_pipeline(preprocessing.StandardScaler(), model)
 
 
 def train(model, X, y):
-    """Inputs: a scikit-learn machine learning class, data and labels.
-    Returns a classifier fitted to data and labels."""
+    """
+    Fits a classifier pipeline to data and labels.
+
+    Args:
+        model (sklearn.base.BaseEstimator): A scikit-learn machine learning
+            class.
+        X (array-like): Feature data.
+        y (array-like): Labels.
+
+    Returns:
+        sklearn.pipeline.Pipeline: Fitted classifier pipeline.
+    """
     pipe = train_pipeline(model)
     pipe.fit(X, y)
     return pipe
 
 
 def evaluate(algorithm_name, grids, X_test, y_test):
-    """Input: the algorithm name, a dictionary of GridSearchCV objects, test data and labels
-    Prints the classification report and the best hyperparameters.
-    Saves a confusion matrix for the best model"""
+    """
+    Evaluates models, prints classification reports, and saves confusion
+    matrices.
+
+    Args:
+        algorithm_name (str): Name of the algorithm.
+        grids (dict): Dictionary of GridSearchCV objects.
+        X_test (array-like): Test feature data.
+        y_test (array-like): Test labels.
+
+    Returns:
+        None
+    """
     for dataset in grids:
         grid = grids[dataset]
         y_pred = grid.best_estimator_.predict(X_test)
@@ -40,11 +78,19 @@ def evaluate(algorithm_name, grids, X_test, y_test):
         print("Best parameters:", grids[dataset].best_params_)
         print()
 
-    full_labels = ["CDU/CSU", "SPD", "BÜNDNIS 90/DIE GRÜNEN", "DIE LINKE", "AfD", "FDP"]
+    full_labels = [
+        "CDU/CSU", "SPD", "BÜNDNIS 90/DIE GRÜNEN",
+        "DIE LINKE", "AfD", "FDP"
+    ]
     labels = ["CDU/CSU", "SPD", "GRÜNE", "LINKE", "AfD", "FDP"]
 
-    cm = confusion_matrix(y_test, y_pred, normalize='true', labels=full_labels)
-    disp_cm = ConfusionMatrixDisplay(confusion_matrix=cm, display_labels=labels)
+    cm = confusion_matrix(y_test,
+                          y_pred,
+                          normalize='true',
+                          labels=full_labels)
+
+    disp_cm = ConfusionMatrixDisplay(confusion_matrix=cm,
+                                     display_labels=labels)
 
     disp_cm.plot(cmap='Blues')
     plt.title(f"Confusion Matrix for {algorithm_name}")
@@ -63,7 +109,11 @@ y = filtered_feature_df["party"]
 
 
 # Perform train_test_split
-X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=RANDOM_STATE)
+X_train, X_test, y_train, y_test = train_test_split(X,
+                                                    y,
+                                                    test_size=0.2,
+                                                    random_state=RANDOM_STATE
+                                                    )
 
 
 # Investigate the features
@@ -73,7 +123,12 @@ cv = StratifiedKFold(n_splits=5, shuffle=True, random_state=RANDOM_STATE)
 
 # Set the class_weight parameter in order to not favor the majority class
 full_model = train_pipeline(LogisticRegression(class_weight='balanced'))
-full_score = cross_val_score(full_model, X, y, cv=cv, scoring='f1_macro').mean()
+full_score = cross_val_score(full_model,
+                             X,
+                             y,
+                             cv=cv,
+                             scoring='f1_macro'
+                             ).mean()
 print(f"macro F1-score with all features: {full_score}")
 print()
 
@@ -81,10 +136,18 @@ print()
 for col in X.columns:
     X_mod = X.drop(columns=[col])
     model_mod = train_pipeline(LogisticRegression(class_weight='balanced'))
-    score_mod = cross_val_score(model_mod, X_mod, y, cv=cv, scoring='f1_macro').mean()
+    score_mod = cross_val_score(model_mod,
+                                X_mod,
+                                y,
+                                cv=cv,
+                                scoring='f1_macro'
+                                ).mean()
     print(f"macro F1-score without feature {col}: {score_mod}")
     if score_mod > full_score:
-        print(f"Better without feature {col}: {score_mod:.4f} > {full_score:.4f}")
+        print(
+            f"Better without feature {col}: {score_mod:.4f} > "
+            f"{full_score:.4f}"
+        )
 
 
 # Build balanced training sets
@@ -122,7 +185,10 @@ for dataset in train_datasets.keys():
         cv=5
     )
 
-    grids_lr[dataset].fit(train_datasets[dataset][0], train_datasets[dataset][1])
+    grids_lr[dataset].fit(
+        train_datasets[dataset][0],
+        train_datasets[dataset][1]
+    )
 
 
 # Support Vector Classifier
@@ -143,8 +209,10 @@ for dataset in train_datasets.keys():
         cv=5
     )
 
-    grids_svc[dataset].fit(train_datasets[dataset][0], train_datasets[dataset][1])
-
+    grids_svc[dataset].fit(
+        train_datasets[dataset][0],
+        train_datasets[dataset][1]
+    )
 
 
 # Random Forest Classifier
@@ -166,7 +234,10 @@ for dataset in train_datasets.keys():
         cv=5
     )
 
-    grids_rfc[dataset].fit(train_datasets[dataset][0], train_datasets[dataset][1])
+    grids_rfc[dataset].fit(
+        train_datasets[dataset][0],
+        train_datasets[dataset][1]
+    )
 
 
 # Evaluate all three algorithms

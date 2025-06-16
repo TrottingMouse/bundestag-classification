@@ -1,12 +1,12 @@
-"""This script downloads the xml-Files from the Bundestag website and makes them readable"""
+"""This script downloads the xml-Files from the Bundestag website 
+and makes them readable."""
 
 import requests
 
-number_of_sessions = 212
+NUMBER_OF_SESSIONS = 212
 
 # For every debate there is an xml-file and the number is in its Link
-#all debates till parliamentary summer break
-for sitzungsnummer in range(1, number_of_sessions + 1):
+for sitzungsnummer in range(1, NUMBER_OF_SESSIONS + 1):
     # URL of the XML file
     url = f"https://dserver.bundestag.de/btp/20/20{sitzungsnummer:03}.xml"
 
@@ -26,11 +26,11 @@ for sitzungsnummer in range(1, number_of_sessions + 1):
 # replacing inconsistent whitespace and inconsistencies in XML files
 # weird list formatting because of tabs and line breaks in Strings
 search_symbols = [" ", "<p>", "<p/>",
-                  """<name>
+                    """<name>
 							<vorname>Dirk-UlrichAlexander</vorname>
 							<nachname>Mende Föhr</nachname>
 							<fraktion>SPDCDU/CSU</fraktion>
-						</name>
+					    </name>
 					</redner>Dirk-Ulrich Mende (SPD):</p>""",
                     """<name>
 							<vorname>Dirk-UlrichAlexander</vorname>
@@ -45,7 +45,7 @@ search_symbols = [" ", "<p>", "<p/>",
                     '''</name>
             <p klasse="J">'''
                     ]
-                
+
 replace_symbols = [" ", '<p klasse="J">', '',
                    """<name>
 							<vorname>Dirk-Ulrich</vorname>
@@ -68,7 +68,7 @@ replace_symbols = [" ", '<p klasse="J">', '',
             ]
                    
 
-for sitzungsnummer in range(1, number_of_sessions + 1):
+for sitzungsnummer in range(1, NUMBER_OF_SESSIONS + 1):
     with open(f'Files/20{sitzungsnummer:03}.xml', 'r') as file:
         content = file.read()
 

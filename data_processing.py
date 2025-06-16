@@ -79,7 +79,10 @@ for sitzungsnummer in range(1, number_of_sessions + 1):
                 add_to_speech = 2
                 current_speaker = p.find(".//redner").attrib["id"]
             except AttributeError:
-                print(f"Government/administration speech in session {sitzungsnummer}")
+                print(
+                    f"Government/administration speech in session "
+                    f"{sitzungsnummer}"
+                )
                 print()
 
         # Label for the beginning of a speech
@@ -94,13 +97,16 @@ for sitzungsnummer in range(1, number_of_sessions + 1):
                 # to the last speech
                 if current_speaker == last_speaker:
                     # check if the first parts were already long enough
-                    if all_speeches[fraktion] != [] and all_speeches[fraktion][-1] == last_speech:
+                    if (
+                        all_speeches[fraktion] != []
+                        and all_speeches[fraktion][-1] == last_speech
+                    ):
                         all_speeches[fraktion][-1] += " " + norm_speech[:-1]
                     else:
                         if len(last_speech + norm_speech) >= min_speech_length:
-                            all_speeches[fraktion].append(last_speech
-                                                          + " "
-                                                          + norm_speech[:-1])
+                            all_speeches[fraktion].append(
+                                last_speech + " " + norm_speech[:-1]
+                            )
                 else:
                     if len(current_speech) >= min_speech_length:
                         # append the speech to the dictionary
@@ -140,9 +146,11 @@ with open('all_docs.pkl', 'wb') as f:
     pickle.dump(all_speeches_as_docs, f)
 
 
-with open('all_speeches.pkl', 'wb') as outfile:
-    pickle.dump(all_speeches, outfile)
+# commented out because not needed, remove comment if desired
+
+# with open('all_speeches.pkl', 'wb') as outfile:
+#     pickle.dump(all_speeches, outfile)
 
 
 for i in all_speeches:
-    print(len(all_speeches[i]))
+    print(f"For party {i} there are {len(all_speeches[i])} speeches.")

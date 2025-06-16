@@ -1,10 +1,8 @@
 from features import *
 import pickle
 from spacy.tokens import DocBin
-from spacy.tokens import Doc
 import pandas as pd
 import spacy
-
 
 
 with open('all_docs.pkl', 'rb') as infile:
@@ -18,6 +16,7 @@ feature_matrices = pd.DataFrame(columns=[
     "avg_dependency_length", "negation_share"
 ])
 
+# Extract speeches from DocBin objects
 # As the speeches are already annotated, we only need a blank pipeline
 nlp = spacy.blank("de")
 for key in all_speeches_as_docs.keys():
@@ -27,7 +26,7 @@ for key in all_speeches_as_docs.keys():
     docs = list(doc_bin.get_docs(nlp.vocab))
     all_speeches_as_docs[key] = docs
 
-# Populate DataFrame
+# Write Data into DataFrame
 rows = []
 for key in all_speeches_as_docs.keys():
     for doc in all_speeches_as_docs[key]:
