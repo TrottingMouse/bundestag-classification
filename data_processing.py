@@ -11,9 +11,9 @@ from spacy.tokens import DocBin
 
 
 # Define minimum speech length in characters
-min_speech_length = 1500
+MIN_SPEECH_LENGTH = 1500
 
-number_of_sessions = 212
+NUMBER_OF_SESSIONS = 212
 
 
 all_speeches = {"CDU/CSU": [],
@@ -56,7 +56,7 @@ def normalize_text(text):
 
 
 # Read XML files and extract speeches into separate lists for each party
-for sitzungsnummer in range(1, number_of_sessions + 1):
+for sitzungsnummer in range(1, NUMBER_OF_SESSIONS + 1):
     root = read_xml_file(f'Files/20{sitzungsnummer:03}.xml')
     sitzung = root.find("sitzungsverlauf")
 
@@ -103,12 +103,12 @@ for sitzungsnummer in range(1, number_of_sessions + 1):
                     ):
                         all_speeches[fraktion][-1] += " " + norm_speech[:-1]
                     else:
-                        if len(last_speech + norm_speech) >= min_speech_length:
+                        if len(last_speech + norm_speech) >= MIN_SPEECH_LENGTH:
                             all_speeches[fraktion].append(
                                 last_speech + " " + norm_speech[:-1]
                             )
                 else:
-                    if len(current_speech) >= min_speech_length:
+                    if len(current_speech) >= MIN_SPEECH_LENGTH:
                         # append the speech to the dictionary
                         # without last space character
                         all_speeches[fraktion].append(norm_speech[:-1])
